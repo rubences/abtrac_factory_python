@@ -3,14 +3,13 @@ from abc import ABC, abstractmethod
 
 
 class AbstractFactory(ABC):
-    """
-    The Abstract Factory interface declares a set of methods that return
-    different abstract products. These products are called a family and are
-    related by a high-level theme or concept. Products of one family are usually
-    able to collaborate among themselves. A family of products may have several
-    variants, but the products of one variant are incompatible with products of
-    another.
-    """
+    """ La interfaz Abstract Factory declara un conjunto de métodos que devuelven
+     diferentes productos abstractos. Estos productos se llaman familia y son
+     relacionados por un tema o concepto de alto nivel. Los productos de una familia suelen ser
+     capaces de colaborar entre sí. Una familia de productos puede tener varios
+     variantes, pero los productos de una variante son incompatibles con los productos de
+     otro.
+     """
     @abstractmethod
     def create_product_a(self) -> AbstractProductA:
         pass
@@ -19,14 +18,22 @@ class AbstractFactory(ABC):
     def create_product_b(self) -> AbstractProductB:
         pass
 
+    @abstractmethod
+    def create_product_c(self) -> AbstractProductC:
+        pass
+
+    @abstractmethod
+    def create_product_d(self) -> AbstractProductD:
+        pass
+
 
 class ConcreteFactory1(AbstractFactory):
     """
-    Concrete Factories produce a family of products that belong to a single
-    variant. The factory guarantees that resulting products are compatible. Note
-    that signatures of the Concrete Factory's methods return an abstract
-    product, while inside the method a concrete product is instantiated.
-    """
+     Las Fábricas de Hormigón producen una familia de productos que pertenecen a un solo
+     variante. La fábrica garantiza que los productos resultantes son compatibles. Nota
+     que las firmas de los métodos de Concrete Factory devuelven un resumen
+     producto, mientras que dentro del método se instancia un producto concreto.
+     """
 
     def create_product_a(self) -> AbstractProductA:
         return ConcreteProductA1()
@@ -34,10 +41,16 @@ class ConcreteFactory1(AbstractFactory):
     def create_product_b(self) -> AbstractProductB:
         return ConcreteProductB1()
 
+    def create_product_c(self) -> AbstractProductC:
+        return ConcreteProductC1()
+    
+    def create_product_d(self) -> AbstractProductD:
+        return ConcreteProductD1()
+
 
 class ConcreteFactory2(AbstractFactory):
     """
-    Each Concrete Factory has a corresponding product variant.
+    Cada fábrica de hormigón tiene una variante de producto correspondiente.
     """
 
     def create_product_a(self) -> AbstractProductA:
@@ -45,6 +58,13 @@ class ConcreteFactory2(AbstractFactory):
 
     def create_product_b(self) -> AbstractProductB:
         return ConcreteProductB2()
+    
+    def create_product_c(self) -> AbstractProductC:
+        return ConcreteProductC2()
+    
+    def create_product_d(self) -> AbstractProductD:
+        return ConcreteProductD2()
+
 
 
 class AbstractProductA(ABC):
@@ -55,12 +75,12 @@ class AbstractProductA(ABC):
 
     @abstractmethod
     def useful_function_a(self) -> str:
-        pass
+         pass
 
 
-"""
-Concrete Products are created by corresponding Concrete Factories.
-"""
+    """
+    Concrete Products are created by corresponding Concrete Factories.
+    """
 
 
 class ConcreteProductA1(AbstractProductA):
@@ -75,14 +95,14 @@ class ConcreteProductA2(AbstractProductA):
 
 class AbstractProductB(ABC):
     """
-    Here's the the base interface of another product. All products can interact
-    with each other, but proper interaction is possible only between products of
-    the same concrete variant.
+Aquí está la interfaz base de otro producto. Todos los productos pueden interactuar
+     entre sí, pero la interacción adecuada sólo es posible entre productos de
+     la misma variante concreta.
     """
     @abstractmethod
     def useful_function_b(self) -> None:
         """
-        Product B is able to do its own thing...
+El Producto B es capaz de hacer lo suyo...
         """
         pass
 
@@ -130,6 +150,43 @@ class ConcreteProductB2(AbstractProductB):
         result = collaborator.useful_function_a()
         return f"The result of the B2 collaborating with the ({result})"
 
+class AbstractProductC(ABC):
+    """
+    Each distinct product of a product family should have a base interface. All
+    variants of the product must implement this interface.
+    """
+
+    @abstractmethod
+    def useful_function_c(self) -> str:
+        pass
+
+
+class ConcreteProductC1(AbstractProductC):
+    def useful_function_c(self) -> str:
+        return "The result of the product C1."
+
+class ConcreteProductC2(AbstractProductC):
+    def useful_function_c(self) -> str:
+        return "The result of the product C2."
+
+class AbstractProductD(ABC):
+    """
+    Each distinct product of a product family should have a base interface. All
+    variants of the product must implement this interface.
+    """
+
+    @abstractmethod
+    def useful_function_d(self) -> str:
+        pass
+
+class ConcreteProductD1(AbstractProductD):
+    def useful_function_d(self) -> str:
+        return "The result of the product D1."
+
+class ConcreteProductD2(AbstractProductD):
+    def useful_function_d(self) -> str:
+        return "The result of the product D2."
+
 
 def client_code(factory: AbstractFactory) -> None:
     """
@@ -139,9 +196,15 @@ def client_code(factory: AbstractFactory) -> None:
     """
     product_a = factory.create_product_a()
     product_b = factory.create_product_b()
+    product_c = factory.create_product_c()
+    product_d = factory.create_product_d()
 
     print(f"{product_b.useful_function_b()}")
     print(f"{product_b.another_useful_function_b(product_a)}", end="")
+    print(f"{product_c.useful_function_c()}")
+    print(f"{product_d.useful_function_d()}")
+
+
 
 
 if __name__ == "__main__":
